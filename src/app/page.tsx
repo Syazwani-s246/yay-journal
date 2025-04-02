@@ -52,7 +52,7 @@ export default function Journal() {
       // Add new entry
       const newEntry: Entry = {
         text: entry,
-        timestamp: formatDate(new Date()) , //Guna format baru
+        timestamp: formatDate(new Date()), //Guna format baru
       };
       updatedEntries = [newEntry, ...entries];
     }
@@ -79,10 +79,10 @@ export default function Journal() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-        
+
 
         <h1 className="text-xl font-bold mb-2">One Good Thing Journal</h1>
-<p className="text-gray-600 italic mb-4">Because even small wins deserve to be remembered! 💛</p>
+        <p className="text-gray-600 italic mb-4">Because even small wins deserve to be remembered! 💛</p>
 
         <input
           type="text"
@@ -102,20 +102,20 @@ export default function Journal() {
         <div className="mt-4">
           <h2 className="text-lg font-semibold">My Entries:</h2>
           <ul className="mt-2">
-  {entries.map((e, index) => (
-    <li key={index} className="flex justify-between items-center p-2 bg-gray-200 rounded my-1">
-      <span>
-        ✅ {e.text}  
-        <br />
-        <small className="text-gray-500">🕒{formatDate(new Date(e.timestamp))}</small>
-      </span>
-      <div>
-        <button onClick={() => editEntry(index)} className="text-yellow-600 mx-1">✏️</button>
-        <button onClick={() => deleteEntry(index)} className="text-red-600 mx-1">🗑</button>
-      </div>
-    </li>
-  ))}
-</ul>
+            {entries.map((e, index) => (
+              <li key={index} className="flex justify-between items-center p-2 bg-gray-200 rounded my-1">
+                <span>
+                  ✅ {e.text}
+                  <br />
+                  <small className="text-gray-500">🕒{formatDate(new Date(e.timestamp))}</small>
+                </span>
+                <div>
+                  <button onClick={() => editEntry(index)} className="text-yellow-600 mx-1">✏️</button>
+                  <button onClick={() => deleteEntry(index)} className="text-red-600 mx-1">🗑</button>
+                </div>
+              </li>
+            ))}
+          </ul>
 
 
         </div>
