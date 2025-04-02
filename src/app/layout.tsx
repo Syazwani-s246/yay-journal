@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+
+import NightSky from "./components/NightSky";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -27,7 +29,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        {/* Make sure NightSky is rendered here in the background */}
+        <NightSky />
+        <main className="relative z-10">
+          {children}
+        </main>
       </body>
     </html>
   );
