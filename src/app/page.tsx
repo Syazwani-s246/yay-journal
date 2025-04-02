@@ -1,122 +1,55 @@
-"use client"; // Next.js perlu ini untuk guna useState & useEffect dalam Client Component
-
+"use client";
 import { useState, useEffect } from "react";
+import { Entry, loadEntries, saveEntries } from "@/app/lib/journalUtils" // Import the utility functions
+import JournalEntry from "@/app/components/JournalEntry";
+import JournalBook from "@/app/components/JournalBook";
+import NightSky from "@/app/components/NightSky";
 
-// Define Entry type
-interface Entry {
-  text: string;
-  timestamp: string;
-}
+export default function JournalPage() {
+  const [entries, setEntries] = useState<Entry[]>([]);
+  const [editIndex, setEditIndex] = useState<number | null>(null);
 
-const formatDate = (date: Date) => {
-  return new Intl.DateTimeFormat("en-GB", {
-    day: "2-digit",
-    month: "short",
-    year: "2-digit", // Ensures "25" instead of "2025"
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: true, // Ensures AM/PM format
-  })
-    .format(date)
-};
-
-
-export default function Journal() {
-
-  // State untuk simpan input user
-  const [entry, setEntry] = useState("");
-
-  // State untuk simpan semua entries
-  const [entries, setEntries] = useState<Entry[]>([]); //explain TypeScript yg entries array of strings
-
-  const [editIndex, setEditIndex] = useState<number | null>(null); // Untuk update mode
-
-  // useEffect akan run sekali masa page load untuk fetch data dari localStorage
+  // Load entries from localStorage when the component is mounted
   useEffect(() => {
-    const savedEntries = JSON.parse(localStorage.getItem("entries") || "[]");
-    setEntries(savedEntries);
+    setEntries(loadEntries());
   }, []);
 
-  // Save new entry atau update entry sedia ada
-  const saveEntry = () => {
-    if (!entry.trim()) return;
-
-    let updatedEntries: Entry[];
-
+  // Handle saving new or updated entry
+  const handleSaveEntry = (entry: Entry) => {
+    let updatedEntries;
     if (editIndex !== null) {
-      // Update existing entry
       updatedEntries = [...entries];
-      updatedEntries[editIndex] = { text: entry, timestamp: formatDate(new Date()) };
-      setEditIndex(null); // Keluar dari mode edit
+      updatedEntries[editIndex] = entry;
+      setEditIndex(null);
     } else {
-      // Add new entry
-      const newEntry: Entry = {
-        text: entry,
-        timestamp: formatDate(new Date()), //Guna format baru
-      };
-      updatedEntries = [newEntry, ...entries];
+      updatedEntries = [entry, ...entries];
     }
 
     setEntries(updatedEntries);
-    localStorage.setItem("entries", JSON.stringify(updatedEntries));  // Simpan ke localStorage
-    setEntry("");  // Kosongkan input selepas simpan
+    saveEntries(updatedEntries);
   };
 
-  // Masukkan entry ke dalam input untuk edit
-  const editEntry = (index: number) => {
-    setEntry(entries[index].text);
+  // Handle editing an existing entry
+  const handleEditEntry = (index: number) => {
     setEditIndex(index);
   };
 
-  // Delete entry dari list
-  const deleteEntry = (index: number) => {
+  // Handle deleting an entry
+  const handleDeleteEntry = (index: number) => {
     const updatedEntries = entries.filter((_, i) => i !== index);
     setEntries(updatedEntries);
-    localStorage.setItem("entries", JSON.stringify(updatedEntries));
+    saveEntries(updatedEntries);
   };
 
-
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+    <div className="relative min-h-screen flex flex-col items-center justify-center p-4">
+      <NightSky />
+      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative z-10">
         <h1 className="text-xl font-bold mb-2">One Good Thing Journal</h1>
         <p className="text-gray-600 italic mb-4">Because even small wins deserve to be remembered! 💛</p>
 
-        <input
-          type="text"
-          placeholder="Tulis benda baik hari ni..."
-          value={entry}
-          onChange={(e) => setEntry(e.target.value)}
-          className="w-full p-2 border rounded mb-2"
-        />
-
-        <button
-          onClick={saveEntry}
-          className={`w-full p-2 rounded text-white ${editIndex !== null ? "bg-green-500 hover:bg-green-600" : "bg-blue-500 hover:bg-blue-600"}`}
-        >
-          {editIndex !== null ? "Update Entry" : "Save Entry"}
-        </button>
-
-        <div className="mt-4">
-          <h2 className="text-lg font-semibold">My Entries:</h2>
-          <ul className="mt-2">
-            {entries.map((e, index) => (
-              <li key={index} className="flex justify-between items-center p-2 bg-gray-200 rounded my-1">
-                <span>
-                  ✅ {e.text}
-                  <br />
-                  <small className="text-gray-500">🕒{formatDate(new Date(e.timestamp))}</small>
-                </span>
-                <div>
-                  <button onClick={() => editEntry(index)} className="text-yellow-600 mx-1">✏️</button>
-                  <button onClick={() => deleteEntry(index)} className="text-red-600 mx-1">🗑</button>
-                </div>
-              </li>
-            ))}
-          </ul>
-
-
-        </div>
+        <JournalEntry onSave={handleSaveEntry} editEntry={editIndex !== null ? entries[editIndex] : null} />
+        <JournalBook entries={entries} onEdit={handleEditEntry} onDelete={handleDeleteEntry} />
       </div>
     </div>
   );
