@@ -1,56 +1,61 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Entry, loadEntries, saveEntries } from "@/app/lib/journalUtils" // Import the utility functions
+import { v4 as uuidv4 } from "uuid"; // Unique ID generator
+
 import JournalEntry from "@/app/components/JournalEntry";
 import JournalBook from "@/app/components/JournalBook";
 import NightSky from "@/app/components/NightSky";
 
-export default function JournalPage() {
-  const [entries, setEntries] = useState<Entry[]>([]);
-  const [editIndex, setEditIndex] = useState<number | null>(null);
+// ✅ FIXED: Use `import type`
+import type { JournalEntry as JournalEntryType } from "@/app/lib/journalUtils";
+import { loadEntriesFromLocalStorage, saveEntriesToLocalStorage, generateStarPosition } from "@/app/lib/journalUtils";
 
-  // Load entries from localStorage when the component is mounted
+const Journal: React.FC = () => {
+  const [entries, setEntries] = useState<JournalEntryType[]>([]);
+  const [isBookOpen, setIsBookOpen] = useState(false);
+  
+  // Load entries from local storage on initial render
   useEffect(() => {
-    setEntries(loadEntries());
+    const savedEntries = loadEntriesFromLocalStorage();
+    setEntries(savedEntries);
   }, []);
-
-  // Handle saving new or updated entry
-  const handleSaveEntry = (entry: Entry) => {
-    let updatedEntries;
-    if (editIndex !== null) {
-      updatedEntries = [...entries];
-      updatedEntries[editIndex] = entry;
-      setEditIndex(null);
-    } else {
-      updatedEntries = [entry, ...entries];
-    }
-
+  
+  // Save a new journal entry
+  const handleSaveEntry = (content: string) => {
+    const newEntry: JournalEntryType = {
+      id: uuidv4(),
+      content,
+      date: new Date().toISOString(),
+      timestamp: Date.now(),
+      starPosition: generateStarPosition(),
+    };
+    
+    const updatedEntries = [newEntry, ...entries];
     setEntries(updatedEntries);
-    saveEntries(updatedEntries);
+    saveEntriesToLocalStorage(updatedEntries);
   };
-
-  // Handle editing an existing entry
-  const handleEditEntry = (index: number) => {
-    setEditIndex(index);
-  };
-
-  // Handle deleting an entry
-  const handleDeleteEntry = (index: number) => {
-    const updatedEntries = entries.filter((_, i) => i !== index);
-    setEntries(updatedEntries);
-    saveEntries(updatedEntries);
-  };
-
+  
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-center p-4">
-      <NightSky />
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative z-10">
-        <h1 className="text-xl font-bold mb-2">One Good Thing Journal</h1>
-        <p className="text-gray-600 italic mb-4">Because even small wins deserve to be remembered! 💛</p>
-
-        <JournalEntry onSave={handleSaveEntry} editEntry={editIndex !== null ? entries[editIndex] : null} />
-        <JournalBook entries={entries} onEdit={handleEditEntry} onDelete={handleDeleteEntry} />
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Night Sky Background with Stars */}
+      <NightSky entries={entries} />
+      
+      {/* Journal Entry Form */}
+      <div className="relative z-10 min-h-screen flex items-center justify-center px-4">
+        <JournalEntry 
+          onSave={handleSaveEntry} 
+          onOpenBook={() => setIsBookOpen(true)}
+        />
       </div>
+      
+      {/* Journal Book Modal */}
+      <JournalBook 
+        entries={entries} 
+        isOpen={isBookOpen} 
+        onClose={() => setIsBookOpen(false)}
+      />
     </div>
   );
-}
+};
+
+export default Journal;
