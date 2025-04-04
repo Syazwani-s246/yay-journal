@@ -5,14 +5,22 @@ import { v4 as uuidv4 } from "uuid"; // Unique ID generator
 import JournalEntry from "@/app/components/JournalEntry";
 import JournalBook from "@/app/components/JournalBook";
 import NightSky from "@/app/components/NightSky";
+import GuideChat from "./components/GuideChat";
 
 // ✅ FIXED: Use `import type`
 import type { JournalEntry as JournalEntryType } from "@/app/lib/journalUtils";
 import { loadEntriesFromLocalStorage, saveEntriesToLocalStorage, generateStarPosition } from "@/app/lib/journalUtils";
 
+
 const Journal: React.FC = () => {
   const [entries, setEntries] = useState<JournalEntryType[]>([]);
   const [isBookOpen, setIsBookOpen] = useState(false);
+
+   // Add this to debug
+   useEffect(() => {
+    console.log('isBookOpen:', isBookOpen);
+  }, [isBookOpen]);
+
   
   // Load entries from local storage on initial render
   useEffect(() => {
@@ -54,6 +62,9 @@ const Journal: React.FC = () => {
         isOpen={isBookOpen} 
         onClose={() => setIsBookOpen(false)}
       />
+
+      {/* Guide Chat */}
+      <GuideChat />
     </div>
   );
 };
