@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import type { JournalEntry } from "@/app/lib/journalUtils"; // Import the correct type
+import { colors, shadows } from "@/theme";
 
 interface NightSkyProps {
   entries: JournalEntry[];
@@ -39,17 +40,33 @@ const NightSky: React.FC<NightSkyProps> = ({ entries }) => {
   }, [entries]);
 
   return (
-    <div className="fixed inset-0 z-0 bg-cosmic-dark overflow-hidden">
-      {/* Stars */}
-      {entries.map((entry) => (
+    <div
+    style={{
+      position: "fixed",
+      inset: 0,
+      zIndex: 0,
+      backgroundColor: colors.cosmicDark,
+      overflow: "hidden",
+      pointerEvents: "none",
+    }}
+  >
+        {/* Stars */}
+        {entries.map((entry) => (
         <div
           key={entry.id}
-          className="absolute w-2 h-2 bg-white rounded-full animate-star-appear"
           style={{
+            position: "absolute",
             top: entry.starPosition.top,
             left: entry.starPosition.left,
-            boxShadow:
-              "0 0 10px 2px rgba(255, 255, 255, 0.7), 0 0 20px 4px rgba(255, 255, 255, 0.3)",
+            width: "8px", // w-2
+            height: "8px", // h-2
+            backgroundColor: colors.cream,
+            borderRadius: "50%", // rounded-full
+            boxShadow: shadows.softGlow,
+            animationName: "star-appear",
+            animationDuration: "1s",
+            animationTimingFunction: "ease-out",
+            animationFillMode: "forwards",
           }}
         />
       ))}
@@ -76,9 +93,16 @@ const NightSky: React.FC<NightSkyProps> = ({ entries }) => {
 
             return (
               <svg
-                key={`line-${lineIndex}`}
-                className="absolute top-0 left-0 w-full h-full z-0 pointer-events-none"
-              >
+              key={`line-${lineIndex}`}
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                zIndex: 0,
+                pointerEvents: "none",
+              }}>
                 <line
                   x1={startPos.x}
                   y1={startPos.y}
