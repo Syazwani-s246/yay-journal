@@ -10,7 +10,7 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recha
 // import { Button } from '@/app/ui/button';
 // import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/app/ui/tabs';
 
-import { colors, fonts, radii, shadows, journalBookStyles } from '@/theme';
+import { colors, fonts, journalBookStyles } from '@/theme';
 
 
 interface JournalBookProps {
@@ -285,7 +285,7 @@ const JournalBook: React.FC<JournalBookProps> = ({ entries, isOpen, onClose }) =
             </div>
 
             <blockquote style={journalBookStyles.quote}>
-              "{currentQuote}"
+              {currentQuote}
             </blockquote>
 
             {/* ✅ ACTION BUTTONS */}

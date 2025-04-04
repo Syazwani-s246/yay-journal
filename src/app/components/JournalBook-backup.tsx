@@ -244,7 +244,7 @@ const JournalBook: React.FC<JournalBookProps> = ({ entries, isOpen, onClose }) =
 
                 {/* Quote */}
                 <blockquote className="bg-white/30 p-4 rounded-lg mb-4 italic border-l-4 border-cosmic-dark/20">
-                  "{currentQuote}"
+                  {currentQuote}
                 </blockquote>
 
                 {/* Export Controls */}

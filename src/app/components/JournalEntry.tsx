@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { toast } from "sonner";
 import { Book } from "lucide-react";
 
-import { colors, fonts, baseButtonStyle, baseTextareaStyle, radii, shadows, layoutStyle, animations } from "@/theme";
+import { colors, fonts, baseButtonStyle, baseTextareaStyle, radii, shadows} from "@/theme";
 
 interface JournalEntryFormProps {
   onSave: (content: string) => void;

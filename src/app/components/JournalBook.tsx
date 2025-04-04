@@ -10,7 +10,7 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recha
 // import { Button } from '@/app/ui/button';
 // import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/app/ui/tabs';
 
-import { colors, fonts, radii, shadows, journalBookStyles } from '@/theme';
+import { colors, fonts, journalBookStyles } from '@/theme';
 
 
 interface JournalBookProps {
@@ -21,7 +21,6 @@ interface JournalBookProps {
 
 const JournalBook: React.FC<JournalBookProps> = ({ entries, isOpen, onClose }) => {
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
-  const [pageDirection, setPageDirection] = useState<'right' | 'left' | null>(null);
   const [weeklyData, setWeeklyData] = useState<WeeklyData[]>([]);
   const [currentQuote, setCurrentQuote] = useState<string>('');
   const [groupedEntries, setGroupedEntries] = useState<{ date: string, entries: JournalEntry[] }[]>([]);
@@ -311,7 +310,7 @@ const JournalBook: React.FC<JournalBookProps> = ({ entries, isOpen, onClose }) =
                 marginTop: '-0.5rem',  // Added negative margin to move quote up
                 marginBottom: '0.5rem'  // Reduced bottom margin
               }}>
-                "{currentQuote}"
+                {currentQuote}
               </blockquote>
             </div>
 
