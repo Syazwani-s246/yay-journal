@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Lora:wght@400;500;600&display=swap');
+
+@import "tailwindcss";
+@import "tailwindcss/preflight";
+@import "tailwindcss/utilities";
+
+
+/* Root variables for light and dark mode */
+:root {
+  --background: #0F172A; /* Deep cosmic blue */
+  --foreground: #fffae3; /* Soft cream for readability */
+  --button-bg: #ffbb86; /* Cosmic peach */
+  --button-hover-bg: #ff9f60;
+  --border-color: rgba(255, 255, 255, 0.2);
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: "Lora", serif;
+}
+
+/* Headings */
+h1, h2, h3 {
+  font-family: "Playfair Display", serif;
+}
+
+/* Text Input */
+textarea {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color);
+  color: var(--foreground);
+  padding: 12px;
+  border-radius: 8px;
+  width: 100%;
+  resize: none;
+}
+
+textarea::placeholder {
+  color: rgba(255, 250, 227, 0.6);
+}
+
+/* Buttons */
+button {
+  background: var(--button-bg);
+  color: var(--background);
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+  width: 100%;
+}
+
+button:hover {
+  background: var(--button-hover-bg);
+}
+ 
